@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SEED_NAME = re.compile(r"^(\d{4}-\d{2}-\d{2})_seed\.zip$")
 SPOILER_SUFFIX = "_Spoiler.txt"
 ARCHIPELAGO_SUFFIX = ".archipelago"
-USER_AGENT = "Awepeeps-Archipelago host_session_room.py"
+USER_AGENT = "awepeeps-archipelago host_session_room.py"
 FLASH_PATTERN = re.compile(
     r'class="[^"]*(?:flash|alert)[^"]*"[^>]*>(.*?)</',
     re.IGNORECASE | re.DOTALL,

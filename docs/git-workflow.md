@@ -1,6 +1,6 @@
 # Git Workflow
 
-This repository keeps the canonical copy in `Awepeeps/Awepeeps-Archipelago` (remote `upstream`) and works from the personal fork `deathpie/Awepeeps-Archipelago` (remote `origin`). A working branch such as `deathpie-main` should normally track `origin/deathpie-main`; `upstream/main` is the source branch to merge from.
+This repository lives in `awepeeps/awepeeps-archipelago` (remote `origin`). Work on a branch in that repository and open a pull request into `main`; `main` is the source of truth. A working branch such as `feature/<topic>` should normally track its matching `origin` branch.
 
 ## Inspect first
 
@@ -15,13 +15,13 @@ An `ahead` or `behind` count is relative to the branch's configured upstream. Ch
 ## Sync a working branch
 
 ```powershell
-git fetch upstream
-git switch deathpie-main
-git merge upstream/main
-git push origin deathpie-main
+git fetch origin
+git switch feature/<topic>
+git merge origin/main
+git push origin feature/<topic>
 ```
 
-Replace `deathpie-main` with the actual working branch. Keep the working branch's upstream pointed at its matching remote branch so normal status and push behavior remain clear. Do not set it to `upstream/main` merely to hide a behind count.
+Replace `feature/<topic>` with the actual working branch. Keep the working branch's upstream pointed at its matching remote branch so normal status and push behavior remain clear. Do not set it to `origin/main` merely to hide a behind count.
 
 ## GitHub identity
 
