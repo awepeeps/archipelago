@@ -39,7 +39,7 @@ the season's player table.
 - `config.json` contains the Discord bot token and the room password. Never
   commit it, the token, the password, or the bot's data folders.
 - Keep the canonical clone beside the other repositories under
-  `<workspace>/projects/repos/Awepeeps-bridgeipelago`, outside this repository.
+  `<workspace>/projects/repos/awepeeps-bridgeipelago`, outside this repository.
   Do not clone into a Windows or WSL home directory. Keep the Linux virtual
   environment in `~/.local/share/bridgeipelago/venv`; it is runtime data, not
   another source checkout.
@@ -66,8 +66,8 @@ Native Windows is unsupported by bridgeipelago v3; use WSL2 (or Docker).
    ```bash
    # Set this to the workspace root mounted in WSL.
    workspace=/mnt/d/dev/deathpie
-   git clone --branch awepeeps-patches https://github.com/Awepeeps/Awepeeps-bridgeipelago.git "$workspace/projects/repos/Awepeeps-bridgeipelago"
-   cd "$workspace/projects/repos/Awepeeps-bridgeipelago"
+   git clone --branch awepeeps-patches https://github.com/awepeeps/awepeeps-bridgeipelago.git "$workspace/projects/repos/awepeeps-bridgeipelago"
+   cd "$workspace/projects/repos/awepeeps-bridgeipelago"
    python3 -m venv ~/.local/share/bridgeipelago/venv
    ~/.local/share/bridgeipelago/venv/bin/python -m pip install --upgrade pip
    ~/.local/share/bridgeipelago/venv/bin/python -m pip install -r requirements.txt
@@ -95,7 +95,7 @@ Verified environment: WSL2 Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
 - Upstream is
   [Quasky/bridgeipelago](https://github.com/Quasky/bridgeipelago). The org fork
   is
-  [Awepeeps/Awepeeps-bridgeipelago](https://github.com/Awepeeps/Awepeeps-bridgeipelago),
+  [awepeeps/awepeeps-bridgeipelago](https://github.com/awepeeps/awepeeps-bridgeipelago),
   and the personal fork is
   [deathpie/Awepeeps-bridgeipelago](https://github.com/deathpie/Awepeeps-bridgeipelago),
   made from the org fork, so all three share one fork network.
@@ -104,7 +104,7 @@ Verified environment: WSL2 Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
   branch and deploy the bot from that branch. Review future patch PRs against
   `awepeeps-patches`; do not merge them into the bot forks' `main` branches.
   Never publish changes to Quasky.
-- The branch is pushed to both forks, so `Awepeeps/Awepeeps-bridgeipelago` and
+- The branch is pushed to both forks, so `awepeeps/awepeeps-bridgeipelago` and
   `deathpie/Awepeeps-bridgeipelago` stay identical. Push it to both after every
   change.
 - To upgrade, synchronize the owned `main` branches from Quasky's `main`, then
@@ -125,7 +125,7 @@ Verified environment: WSL2 Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
     broadcast channel with durable dedupe, restart-preserving pending
     deliveries, bounded retries, and a persisted deadletter list
     (see Hint result announcements and the fork's
-    [hint result reference](https://github.com/Awepeeps/Awepeeps-bridgeipelago/blob/awepeeps-patches/docs/hint-notifications.md)).
+    [hint result reference](https://github.com/awepeeps/awepeeps-bridgeipelago/blob/awepeeps-patches/docs/hint-notifications.md)).
 
 The live clone's remotes follow this layout: `origin` for the personal fork,
 `upstream` for the Awepeeps org fork, and `quasky` for the original
@@ -158,7 +158,7 @@ This uses ordinary fast-forward pushes after the initial branch correction.
 If the mirror update is rejected because `main` has diverged, inspect it rather
 than merging custom commits into it or forcing a routine update. Keep local
 `main` tracking `origin/main`; `quasky` is a read-only source. The separate
-`Awepeeps-Archipelago` documentation repository still uses its own `main` for
+`awepeeps-archipelago` documentation repository still uses its own `main` for
 community documentation; the mirror policy applies to the bot forks.
 
 `config.json` is unchanged from v3.0.0, so no migration is needed.
@@ -183,12 +183,12 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/mnt/d/dev/<workspace>/projects/repos/Awepeeps-bridgeipelago
+WorkingDirectory=/mnt/d/dev/<workspace>/projects/repos/awepeeps-bridgeipelago
 ExecStart=/home/<user>/.local/share/bridgeipelago/venv/bin/python -u -c "import multiprocessing as m, runpy; m.set_start_method('fork'); runpy.run_path('bridgeipelago.py', run_name='__main__')" config.json
 Restart=on-failure
 RestartSec=10
-StandardOutput=append:/mnt/d/dev/<workspace>/projects/repos/Awepeeps-bridgeipelago/bot.out
-StandardError=append:/mnt/d/dev/<workspace>/projects/repos/Awepeeps-bridgeipelago/bot.out
+StandardOutput=append:/mnt/d/dev/<workspace>/projects/repos/awepeeps-bridgeipelago/bot.out
+StandardError=append:/mnt/d/dev/<workspace>/projects/repos/awepeeps-bridgeipelago/bot.out
 
 [Install]
 WantedBy=default.target
@@ -210,7 +210,7 @@ systemctl --user status bridgeipelago
 ```
 
 Logs go to `journalctl --user -u bridgeipelago -f` and the appended
-`<workspace>/projects/repos/Awepeeps-bridgeipelago/bot.out`. Stop or restart with
+`<workspace>/projects/repos/awepeeps-bridgeipelago/bot.out`. Stop or restart with
 `systemctl --user stop|restart bridgeipelago`.
 
 ## Docker alternative
@@ -347,7 +347,7 @@ including emojis. Supported placeholders are `{receiver}`, `{item}`,
 `{location}`, `{finder}`, `{status}`, and `{entrance}`. The entrance placeholder
 is empty when absent, otherwise it includes an ` Entrance: ` prefix. Missing or
 blank overrides use a plain built-in message. See the fork's
-[hint result reference](https://github.com/Awepeeps/Awepeeps-bridgeipelago/blob/awepeeps-patches/docs/hint-notifications.md)
+[hint result reference](https://github.com/awepeeps/awepeeps-bridgeipelago/blob/awepeeps-patches/docs/hint-notifications.md)
 for the startup baseline, persistence, and duplicate-handling details.
 
 ## Daily status reports
@@ -465,7 +465,7 @@ Clearing registrations also removes consent and watches. Hint announcements
 and chat relays continue to suppress mentions; item pings only allow the
 specific consenting users and never enable role or everyone mentions.
 
-See the fork's [item pings and watches reference](https://github.com/Awepeeps/Awepeeps-bridgeipelago/blob/awepeeps-patches/docs/item-watches.md)
+See the fork's [item pings and watches reference](https://github.com/awepeeps/awepeeps-bridgeipelago/blob/awepeeps-patches/docs/item-watches.md)
 for delivery and storage details.
 
 ## Registration and commands
@@ -623,7 +623,7 @@ disabled by our `BotItemSpoilTraps: false` setting. These preferences are saved
 in the ignored local `config.json` and survive restarts; the community template
 provides the same defaults. For combined flags, trap handling, and the Spirit
 Light example, see the fork's
-[item notification reference](https://github.com/Awepeeps/Awepeeps-bridgeipelago/blob/awepeeps-patches/docs/item-notifications.md).
+[item notification reference](https://github.com/awepeeps/awepeeps-bridgeipelago/blob/awepeeps-patches/docs/item-notifications.md).
 
 There are two separate paths with separate filters:
 

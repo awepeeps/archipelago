@@ -1,6 +1,6 @@
 # Git Workflow
 
-This repository keeps the canonical copy in `Awepeeps/Awepeeps-Archipelago` (remote `upstream`) and works from the personal fork `deathpie/Awepeeps-Archipelago` (remote `origin`). A working branch such as `deathpie-main` should normally track `origin/deathpie-main`; `upstream/main` is the source branch to merge from.
+This repository keeps the canonical copy in `awepeeps/awepeeps-archipelago` (remote `upstream`) and works from the personal fork `deathpie/Awepeeps-Archipelago` (remote `origin`). A working branch such as `deathpie-main` should normally track `origin/deathpie-main`; `upstream/main` is the source branch to merge from.
 
 ## Inspect first
 
