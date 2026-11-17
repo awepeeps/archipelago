@@ -62,7 +62,7 @@ Native Windows is unsupported by bridgeipelago v3; use WSL2 (or Docker).
    PowerShell, then reboot and set the Linux user.
 2. Install prerequisites (skip any already present):
    `sudo apt update && sudo apt install -y git python3 python3-venv python3-pip`
-3. Clone our fork's deployment branch, `awepeeps-patches`:
+3. Clone the org repo's deployment branch, `awepeeps-patches`:
    ```bash
    # Set this to the workspace root mounted in WSL.
    workspace=/mnt/d/dev/deathpie
@@ -90,26 +90,24 @@ Verified environment: WSL2 Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
 `awepeeps-patches` (based on `live-v3.0.1`, commit `91a24ff`), websockets
 13.1, discord.py 2.7.1.
 
-### Forks and local changes
+### Fork and local changes
 
 - Upstream is
-  [Quasky/bridgeipelago](https://github.com/Quasky/bridgeipelago). The org fork
-  is
+  [Quasky/bridgeipelago](https://github.com/Quasky/bridgeipelago). Our canonical
+  repository is
   [awepeeps/awepeeps-bridgeipelago](https://github.com/awepeeps/awepeeps-bridgeipelago),
-  and the personal fork is
-  [deathpie/Awepeeps-bridgeipelago](https://github.com/deathpie/Awepeeps-bridgeipelago),
-  made from the org fork, so all three share one fork network.
-- `main` in both owned bot forks mirrors Quasky's `main`, without Awepeeps
-  customizations. Keep all local patches on the long-lived `awepeeps-patches`
-  branch and deploy the bot from that branch. Review future patch PRs against
-  `awepeeps-patches`; do not merge them into the bot forks' `main` branches.
-  Never publish changes to Quasky.
-- The branch is pushed to both forks, so `awepeeps/awepeeps-bridgeipelago` and
-  `deathpie/Awepeeps-bridgeipelago` stay identical. Push it to both after every
-  change.
-- To upgrade, synchronize the owned `main` branches from Quasky's `main`, then
-  merge the chosen original release tag into `awepeeps-patches`, verify the
-  result, and push the patch branch to both owned forks (see Upgrading).
+  a fork of it. There is no personal fork: work in branches in the org repo and
+  open PRs into it.
+- `main` mirrors Quasky's `main`, without Awepeeps customizations. Keep all
+  local patches on the long-lived `awepeeps-patches` branch and deploy the bot
+  from that branch. Review future patch PRs against `awepeeps-patches`; do not
+  merge them into `main`. Never publish changes to Quasky.
+- Push the working branch to `origin` in `awepeeps/awepeeps-bridgeipelago`, and
+  open the PR against `awepeeps-patches` there. There is no second fork to keep
+  in sync.
+- To upgrade, synchronize `main` from Quasky's `main`, then merge the chosen
+  original release tag into `awepeeps-patches`, verify the result, and push the
+  patch branch to the org repo (see Upgrading).
 - Current patches on `awepeeps-patches`:
   - The port-change announcement: `CheckArchHost()` already detects a new
     archipelago.gg room port, updates `config.json`, and reports it to the
@@ -127,10 +125,10 @@ Verified environment: WSL2 Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
     (see Hint result announcements and the fork's
     [hint result reference](https://github.com/awepeeps/awepeeps-bridgeipelago/blob/awepeeps-patches/docs/hint-notifications.md)).
 
-The live clone's remotes follow this layout: `origin` for the personal fork,
-`upstream` for the Awepeeps org fork, and `quasky` for the original
+The live clone's remotes follow this layout: `origin` for
+`awepeeps/awepeeps-bridgeipelago` and `quasky` for the original
 Quasky/bridgeipelago project. Fetch original release tags from `quasky` when
-upgrading; publish our patches to `upstream` and `origin`.
+upgrading; publish our patches to `origin`.
 
 ### Upgrading
 
@@ -144,12 +142,10 @@ systemctl --user stop bridgeipelago
 git switch awepeeps-patches
 git fetch quasky --tags
 git fetch quasky main:main    # fast-forward local main without checking it out
-git push upstream main
 git push origin main
 git merge <new-upstream-tag>    # for example live-v3.0.2
 ~/.local/share/bridgeipelago/venv/bin/python -m pip install -r requirements.txt
 ~/.local/share/bridgeipelago/venv/bin/python -m unittest discover
-git push upstream awepeeps-patches
 git push origin awepeeps-patches
 systemctl --user start bridgeipelago
 ```
@@ -159,7 +155,7 @@ If the mirror update is rejected because `main` has diverged, inspect it rather
 than merging custom commits into it or forcing a routine update. Keep local
 `main` tracking `origin/main`; `quasky` is a read-only source. The separate
 `awepeeps-archipelago` documentation repository still uses its own `main` for
-community documentation; the mirror policy applies to the bot forks.
+community documentation; the mirror policy applies to the bot repo.
 
 `config.json` is unchanged from v3.0.0, so no migration is needed.
 
