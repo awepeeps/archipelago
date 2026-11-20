@@ -1,6 +1,6 @@
 # Git Workflow
 
-This repository lives in `awepeeps/awepeeps-archipelago` (remote `origin`). Work on a branch in that repository and open a pull request into `main`; `main` is the source of truth. A working branch such as `feature/<topic>` should normally track its matching `origin` branch.
+This repository lives in `awepeeps/archipelago` (remote `origin`). Work on a branch in that repository and open a pull request into `main`; `main` is the source of truth. A working branch such as `feature/<topic>` should normally track its matching `origin` branch.
 
 ## Inspect first
 

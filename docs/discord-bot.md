@@ -154,7 +154,7 @@ This uses ordinary fast-forward pushes after the initial branch correction.
 If the mirror update is rejected because `main` has diverged, inspect it rather
 than merging custom commits into it or forcing a routine update. Keep local
 `main` tracking `origin/main`; `quasky` is a read-only source. The separate
-`awepeeps-archipelago` documentation repository still uses its own `main` for
+`archipelago` documentation repository still uses its own `main` for
 community documentation; the mirror policy applies to the bot repo.
 
 `config.json` is unchanged from v3.0.0, so no migration is needed.
