@@ -2,7 +2,7 @@
 
 This is the canonical operating procedure for creating, generating, and sharing an Awepeeps Archipelago session. Use `just` for every repository workflow; scripts remain implementation sources behind the recipes. Install Python, Git and `just` 1.33 or newer, then run `just setup` from the repository root. Paths are relative to that root unless absolute.
 
-Set variables before the recipe name: `just season="2026/3. Fall" archipelago="<installed-directory>" generate --dry-run`. The default season is `2026/3. Fall`; `archipelago` defaults to `C:/ProgramData/Archipelago` on Windows. macOS and Linux users must supply their actual installation path. `input` and `output` default to the selected season's `YAML` and `.secrets/hidden` directories and can also be overridden. Arguments after the recipe name pass through as positional arguments, including quoted paths with spaces. `just --list` lists all recipes.
+Set variables before the recipe name: `just season="2026/3. Fall" archipelago="<installed-directory>" generate --dry-run`. The default season is `2026/3. Fall`; `archipelago` has no default, so always supply the actual installation directory. `input` and `output` default to the selected season's `YAML` and `.secrets/hidden` directories and can also be overridden. Arguments after the recipe name pass through as positional arguments, including quoted paths with spaces. `just --list` lists all recipes.
 
 ## Layout
 
@@ -43,13 +43,13 @@ Run `just doctor` to inspect the local Git checkout, status, remotes and worktre
 
 To check the bot configuration, supply its actual private path; paths with spaces are supported:
 
-```powershell
+```sh
 just config-check "private bot/config.json"
 ```
 
 The doctor and config-check recipes accept `--repo <checkout>` to override the inspected root; a relative config path resolves against that root. Neither starts the bot or contacts Discord or Archipelago. Diagnostics name invalid keys without printing tokens, passwords, IDs or raw config values. They check local shape and required session settings, not whether credentials authenticate or a live room is correct. `ExpectedSeedName` must come from the trusted original `AP_<seed_name>.archipelago` filename; add `--expected-seed <trusted-name>` to config-check for exact comparison without echoing it. Set `DailyPostConfig.DeathLinkSlots` to exact participating slot names, `[]` when no games participate, or `null` when unknown. Unknown must never be treated as completed.
 
-`just check` runs the validator, compiles the scripts and runs the offline tests. `just smoke` exercises actual recipes using isolated argument-forwarding fixtures and offline CLI help checks. CI runs these checks on Windows, macOS and Linux; it does not generate a real game or host a room. Real generation requires a usable Archipelago installation, reviewed APWorlds and local ROMs where required. Hosting requires network access and admin credentials. `just secrets` runs installed Gitleaks v8 with fully redacted findings and fails if Gitleaks is missing. CI also scans full Git history using a pinned standalone Gitleaks CLI without uploading a report. Inspect private files only locally; do not paste raw config or scanner reports into a review.
+`just check` runs the validator, compiles the scripts and runs the offline tests. `just smoke` exercises actual recipes using isolated argument-forwarding fixtures and offline CLI help checks. CI runs these checks on Linux; it does not generate a real game or host a room. Real generation requires a usable Archipelago installation, reviewed APWorlds and local ROMs where required. Hosting requires network access and admin credentials. `just secrets` runs installed Gitleaks v8 with fully redacted findings and fails if Gitleaks is missing. CI also scans full Git history using a pinned standalone Gitleaks CLI without uploading a report. Inspect private files only locally; do not paste raw config or scanner reports into a review.
 
 ## Create a season
 
@@ -57,7 +57,7 @@ Use `just scaffold` when starting a new season or importing a group of local inp
 
 Start with a dry run:
 
-```powershell
+```sh
 just scaffold --season "2026/4. Winter" --template-season "2026/3. Fall" --player "local inputs/player.yaml" --apworld "local inputs/world.apworld" --rom "local inputs/game.z64" --dry-run
 ```
 
@@ -67,7 +67,7 @@ Active-season player YAMLs must already have literal names. A file with `name: "
 
 Run the repository check immediately after scaffolding:
 
-```powershell
+```sh
 just check
 ```
 
@@ -75,8 +75,8 @@ just check
 
 Always preflight first. This reads only the selected season's YAML and APWorld inputs and skips `game: TBD` players:
 
-```powershell
-just season="2026/3. Fall" archipelago="C:/ProgramData/Archipelago" generate --dry-run
+```sh
+just season="2026/3. Fall" archipelago="$HOME/Archipelago" generate --dry-run
 ```
 
 After reviewing the player list and generator command, remove `--dry-run`. Use an explicit unique `--run-id` for named or repeated runs. Select other player/output folders with `just input="<player-yaml-dir>" output="<workspace-root>" generate --dry-run`. If the date-only default already exists under either `.secrets/hidden/` or `.secrets/revealed/`, generation requires an explicit new ID. Use `--seed <number>` only when a known numeric seed is required. Use `--sync-apworlds` only after reviewing the checked-in archive and its source; the default behavior stops on missing or different installed APWorlds.
@@ -98,13 +98,13 @@ Hosting is the standard step right after a successful generation. It uploads the
 
 Always dry-run first:
 
-```powershell
+```sh
 just season="2026/3. Fall" host 2026-10-17 --dry-run
 ```
 
 After review and authorization for the network upload, remove `--dry-run`:
 
-```powershell
+```sh
 just host 2026-10-17
 ```
 
@@ -114,14 +114,14 @@ The script requires HTTPS except for localhost, and strips the `*_Spoiler.txt` e
 
 For a retained private run, validate and publish both artifacts together:
 
-```powershell
+```sh
 just season="2026/3. Fall" publish 2026-09-20_test --dry-run
 just season="2026/3. Fall" publish 2026-09-20_test
 ```
 
 If the private run has already been removed, provide explicit staged files instead:
 
-```powershell
+```sh
 just season="2026/3. Fall" publish-files --seed "private files/2026-09-20_seed.zip" --spoiler "private files/2026-09-20_spoiler.txt" --destination 2026-09-20_test --dry-run
 ```
 
@@ -139,7 +139,7 @@ A session may run the self-hosted `bridgeipelago` bot for live check, death, and
 
 Start with a read-only closure plan for a specific run:
 
-```powershell
+```sh
 just season="2026/3. Fall" close-session 2026-10-17
 ```
 
@@ -149,7 +149,7 @@ After verification, publish only artifacts the group has chosen to reveal using 
 
 Finish with:
 
-```powershell
+```sh
 just check
 just smoke
 git diff --check

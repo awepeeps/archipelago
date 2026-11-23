@@ -17,7 +17,7 @@ const PUBLIC_KEY = /\.pub$/u;
 /** `id_rsa`, `id_ed25519`, and similar OpenSSH private key names. */
 const PRIVATE_KEY_NAME = /^id_[A-Za-z0-9._-]+$/u;
 
-/** Both separators, so the same bytes work on a Windows checkout. */
+/** Both separators, so a path written either way parses. */
 function baseName(path: string): string {
   const parts = path.split(/[\\/]/u);
   return parts[parts.length - 1] ?? path;
