@@ -50,3 +50,9 @@ just smoke
 GitHub Actions runs the required `check` and `secrets` jobs on pull requests, and the full validation, tests and actual-recipe smoke checks on Windows, macOS and Linux on `main` and weekly. These offline checks do not generate a real game or host a room. A passing check does not replace human review of game settings, ROM compatibility, APWorld provenance, or generated spoiler handling.
 
 `just check` runs the validator, byte-compiles the scripts, and runs the tests. `just smoke` exercises the actual wrappers with offline fixtures. `just doctor` inspects local Git state; `just config-check <path>` performs redacted local config checks. `just close-session <run>` produces a closure plan only. `just secrets` requires Gitleaks v8 and prints fully redacted findings. `just --list` shows every recipe. Scripts remain implementation sources behind the recipes.
+
+## Git hooks
+
+Hooks are installed once per checkout with `just hooks` and run through Lefthook, loading the
+shared jobs from `awepeeps/.github` at the `hooks-v2` tag. Agents never bypass them (C7.11):
+no `LEFTHOOK=0`, no `git commit --no-verify`, and no `lefthook-local.yml`.

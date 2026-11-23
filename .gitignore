@@ -67,3 +67,6 @@ __pycache__/
 # Other common ignores (if needed)
 # *.log
 # .DS_Store
+
+# Lefthook per-machine overrides. Never committed and never used by agents (C7.11).
+lefthook-local.yml
