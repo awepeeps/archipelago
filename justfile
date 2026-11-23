@@ -1,4 +1,4 @@
-# Canonical task entry point. Requires just >= 1.33 and Python >= 3.12 on PATH.
+# Canonical task entry point. Requires just >= 1.59.0 and Python >= 3.12 on PATH.
 # Script recipes forward argv directly; user paths are never interpolated into code.
 set positional-arguments
 
@@ -16,6 +16,30 @@ export AWEPEEPS_TASK_OUTPUT := output
 @default:
     import subprocess
     raise SystemExit(subprocess.call(["just", "--list"]))
+
+# Install the pinned tools and validation/test dependencies.
+install: setup
+
+# Format the repository (archived season data is excluded in .formatignore).
+fmt:
+    bun scripts/format.ts
+
+# Fail when a file needs formatting.
+fmt-check:
+    bun scripts/format.ts --check
+
+# Validator plus workflow lint.
+lint: validate
+    actionlint
+    zizmor .github/workflows
+
+# Install the committed git hooks.
+hooks:
+    git config --local core.hooksPath .githooks
+
+# Fail when .agents/skills and .claude/skills disagree.
+agent-files:
+    bun scripts/agent-files.ts
 
 # Install validation/test dependencies.
 [script('python')]
@@ -108,4 +132,4 @@ export AWEPEEPS_TASK_OUTPUT := output
     raise SystemExit(subprocess.call([sys.executable, "scripts/publish_session_artifacts.py", "--season", os.environ["AWEPEEPS_TASK_SEASON"], *sys.argv[1:]]))
 
 # Validate, compile, and run all offline tests through the same entry point as CI.
-check: validate compile test
+check: fmt-check lint compile test
