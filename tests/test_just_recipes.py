@@ -32,8 +32,15 @@ class JustRecipeTests(unittest.TestCase):
             (self.root / 'scripts' / (script + '.py')).write_text(STUB, encoding='utf-8')
         for module in ('pip', 'compileall', 'unittest'):
             (self.root / (module + '.py')).write_text(STUB, encoding='utf-8')
+        self.bin = self.root / 'bin'
+        self.bin.mkdir()
+        for tool in ('bun', 'actionlint', 'zizmor'):
+            stub = self.bin / tool
+            stub.write_text('#!/bin/sh\nexit 0\n', encoding='utf-8')
+            stub.chmod(0o755)
         self.capture = self.root / 'captured argv.jsonl'
-        self.env = {**os.environ, 'AWEPEEPS_RECIPE_CAPTURE': str(self.capture)}
+        self.env = {**os.environ, 'AWEPEEPS_RECIPE_CAPTURE': str(self.capture),
+                    'PATH': f"{self.bin}{os.pathsep}{os.environ['PATH']}"}
 
     def run_recipe(self, *args, expected=0):
         self.capture.unlink(missing_ok=True)

@@ -1,6 +1,7 @@
 """Run Gitleaks natively or in its pinned container, with redacted output."""
 
 import argparse
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -17,7 +18,8 @@ def main(argv=None):
     if executable is None:
         print("ERROR: Install Docker for --container or Gitleaks v8, then rerun; secret scanning was not performed.")
         return 1
-    scan = ["git", str(args.repo), "--log-opts=--all", "--redact=100", "--no-banner"]
+    log_opts = os.environ.get("GITLEAKS_LOG_OPTS", "").strip() or "--all"
+    scan = ["git", str(args.repo), f"--log-opts={log_opts}", "--redact=100", "--no-banner"]
     if args.container:
         command = [executable, "run", "--rm", "--network", "none",
                    "-e", "GIT_CONFIG_COUNT=1", "-e", "GIT_CONFIG_KEY_0=safe.directory",

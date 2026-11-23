@@ -5,7 +5,7 @@ description: "Set up, diagnose, generate, host, publish, or close an Awepeeps Ar
 
 # Archipelago Session Workflow
 
-Use this skill for session lifecycle work in this repository. `just` is the canonical access point; scripts are implementation sources behind recipes. Do not invoke them directly or recreate their copy, move, or validation logic manually. Requires Python, Git and just 1.33 or newer.
+Use this skill for session lifecycle work in this repository. `just` is the canonical access point; scripts are implementation sources behind recipes. Do not invoke them directly or recreate their copy, move, or validation logic manually. Requires Python, Git and just 1.59.0 or newer.
 
 ## Route
 
