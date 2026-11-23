@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
         "--archipelago",
         required=True,
         type=Path,
-        help="Archipelago installation containing ArchipelagoGenerate.exe and custom_worlds/.",
+        help="Archipelago installation containing ArchipelagoGenerate and custom_worlds/.",
     )
     parser.add_argument(
         "--run-id",
@@ -247,8 +247,7 @@ def find_generator(archipelago: Path, override: Path | None) -> Path:
     if override is not None:
         generator = override.resolve()
     else:
-        candidates = (archipelago / "ArchipelagoGenerate.exe", archipelago / "ArchipelagoGenerate")
-        generator = next((candidate for candidate in candidates if candidate.is_file()), candidates[0])
+        generator = archipelago / "ArchipelagoGenerate"
     if not generator.is_file():
         raise GenerationError(f"Archipelago generator not found: {generator}")
     return generator

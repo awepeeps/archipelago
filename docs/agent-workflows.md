@@ -18,7 +18,7 @@ For branch synchronization or GitHub account problems, use [Git workflow](git-wo
 | Validate or prepare a pull request | Run `just check` and `just smoke` | Run `git diff --check` and inspect the final status |
 | Close or archive a session | Run `just close-session <run>` | Plan only; verify tracker/disclosure decisions before separately authorized bot shutdown |
 
-Use `just season="2026/3. Fall" archipelago="<installed-directory>" generate --dry-run` to select a season and installation. The Windows installation default is `C:/ProgramData/Archipelago`; macOS and Linux users must supply their actual installation path. `just --list` lists the canonical recipes; scripts are their implementation sources.
+Use `just season="2026/3. Fall" archipelago="<installed-directory>" generate --dry-run` to select a season and installation. The installation has no default path, so always supply its directory. `just --list` lists the canonical recipes; scripts are their implementation sources.
 
 ## Before editing
 
@@ -39,7 +39,7 @@ Use `just season="2026/3. Fall" archipelago="<installed-directory>" generate --d
 
 Run the repository gate:
 
-```powershell
+```sh
 just check
 just smoke
 git diff --check

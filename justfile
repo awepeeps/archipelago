@@ -3,7 +3,7 @@
 set positional-arguments
 
 season := "2026/3. Fall"
-archipelago := if os_family() == "windows" { "C:/ProgramData/Archipelago" } else { "" }
+archipelago := ""
 input := season + "/YAML"
 output := season + "/.secrets/hidden"
 export AWEPEEPS_TASK_SEASON := season

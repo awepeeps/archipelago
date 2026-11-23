@@ -43,8 +43,8 @@ Use `just generate` to generate a seed from one season's checked-in player YAMLs
 
 Run a preflight first, supplying the actual installation path:
 
-```powershell
-just season="2026/3. Fall" archipelago="C:/ProgramData/Archipelago" generate --dry-run
+```sh
+just season="2026/3. Fall" archipelago="$HOME/Archipelago" generate --dry-run
 ```
 
 After reviewing the reported players and command, omit `--dry-run` to generate. Add `--seed <number>` to select a known numeric seed, `--run-id <name>` for a memorable private output directory, and `--sync-apworlds` only after reviewing any APWorld archive that the tool reports as missing or different. Each completed run contains a `generation-manifest.json` with input hashes, the generator executable hash, and the command, plus `YYYY-MM-DD_seed.zip` and `YYYY-MM-DD_spoiler.txt` directly in the private run folder. Use `just publish <run-id> --dry-run` with the same `season` variable, then rerun without `--dry-run`, to publish those two files into the matching `.secrets/revealed/<run-id>/` folder. Treat the numeric seed as part of the run identity, not as a guarantee of byte-identical output across different Archipelago, APWorld, or runtime states.
@@ -57,7 +57,7 @@ Game-specific caveats belong in the season README. For example, Fall 2026 docume
 
 Use `just` as the canonical entry point for humans and agents. Install Python, Git and `just` 1.33 or newer, then run `just setup` from the repository root. Scripts are maintained implementation sources behind the recipes. Run `just --list` for the full set; `just check` is the pre-review gate.
 
-```powershell
+```sh
 just setup
 just check
 just smoke
@@ -72,9 +72,9 @@ just secrets
 
 `just validate`, `just compile`, and `just test` run the individual checks. `just scaffold` imports inputs, `just compare <before> <after>` compares YAMLs, and `just publish-files` accepts explicit seed/spoiler paths. `just secrets` requires Gitleaks v8; all findings are redacted. `just close-session` always produces a read-only plan.
 
-The `generate` recipe reads the selected season's YAMLs and writes to its `.secrets/hidden` directory by default. Override `season`, `archipelago`, `input`, and `output` before the recipe name. The installation defaults to `C:/ProgramData/Archipelago` on Windows; macOS and Linux users must supply their actual installation path. For example:
+The `generate` recipe reads the selected season's YAMLs and writes to its `.secrets/hidden` directory by default. Override `season`, `archipelago`, `input`, and `output` before the recipe name. The Archipelago installation has no default path; always supply the actual directory with `archipelago`. For example:
 
-```powershell
+```sh
 just season="2026/4. Winter" archipelago="/path/to/Archipelago" input="2026/4. Winter/YAML" output="2026/4. Winter/.secrets/hidden" generate --dry-run
 just generate --run-id 2026-10-03_test --dry-run
 just publish 2026-10-03_test --dry-run
@@ -84,13 +84,13 @@ just publish 2026-10-03_test --dry-run
 
 Set up development dependencies once, then run the checks from the repository root:
 
-```powershell
+```sh
 just setup
 just check
 just smoke
 ```
 
-The validator checks season structure, YAML parsing, active player names, duplicate names, APWorld ZIP integrity, local Markdown links, ignore rules, credentials, and tracked or non-ignored files with common ROM extensions. GitHub Actions runs checks and actual-recipe smoke tests on Windows, macOS and Linux, plus a redacted Git-history secret scan. Smoke tests use isolated argument-forwarding fixtures and CLI help checks; CI does not generate live games or host rooms. Real generation requires the installed Archipelago application and reviewed APWorlds/ROMs, and hosting needs network access and admin credentials.
+The validator checks season structure, YAML parsing, active player names, duplicate names, APWorld ZIP integrity, local Markdown links, ignore rules, credentials, and tracked or non-ignored files with common ROM extensions. GitHub Actions runs checks and actual-recipe smoke tests on Linux, plus a redacted Git-history secret scan. Smoke tests use isolated argument-forwarding fixtures and CLI help checks; CI does not generate live games or host rooms. Real generation requires the installed Archipelago application and reviewed APWorlds/ROMs, and hosting needs network access and admin credentials.
 
 ## Contribution rules
 

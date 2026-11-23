@@ -40,9 +40,8 @@ the season's player table.
   commit it, the token, the password, or the bot's data folders.
 - Keep the canonical clone beside the other repositories under
   `<workspace>/projects/repos/awepeeps-bridgeipelago`, outside this repository.
-  Do not clone into a Windows or WSL home directory. Keep the Linux virtual
-  environment in `~/.local/share/bridgeipelago/venv`; it is runtime data, not
-  another source checkout.
+  Keep the Linux virtual environment in `~/.local/share/bridgeipelago/venv`; it
+  is runtime data, not another source checkout.
 - A repo-local clone under the ignored `bridgeipelago/` path is recognized by
   [.worktreeinclude](../.worktreeinclude) so a worktree can run the bot without
   a re-clone. Only `bridgeipelago/config.json` is listed there; the clone's data
@@ -54,18 +53,14 @@ the season's player table.
   relative to its working directory, keyed by `UniqueID`. Run it from its own
   directory so those folders stay together.
 
-## Host on WSL2
+## Host on Linux
 
-Native Windows is unsupported by bridgeipelago v3; use WSL2 (or Docker).
-
-1. Install WSL2/Ubuntu if needed: `wsl --install -d Ubuntu` in an admin
-   PowerShell, then reboot and set the Linux user.
-2. Install prerequisites (skip any already present):
+1. Install prerequisites (skip any already present):
    `sudo apt update && sudo apt install -y git python3 python3-venv python3-pip`
-3. Clone the org repo's deployment branch, `awepeeps-patches`:
+2. Clone the org repo's deployment branch, `awepeeps-patches`:
    ```bash
-   # Set this to the workspace root mounted in WSL.
-   workspace=/mnt/d/dev/deathpie
+   # Set this to the workspace root.
+   workspace="$HOME/projects"
    git clone --branch awepeeps-patches https://github.com/awepeeps/awepeeps-bridgeipelago.git "$workspace/projects/repos/awepeeps-bridgeipelago"
    cd "$workspace/projects/repos/awepeeps-bridgeipelago"
    python3 -m venv ~/.local/share/bridgeipelago/venv
@@ -73,11 +68,11 @@ Native Windows is unsupported by bridgeipelago v3; use WSL2 (or Docker).
    ~/.local/share/bridgeipelago/venv/bin/python -m pip install -r requirements.txt
    ~/.local/share/bridgeipelago/venv/bin/python -m pip install "websockets<14"   # newer versions break the receive loop
    ```
-4. Create `config.json` from the shipped template, apply the `LanguageFile`
+3. Create `config.json` from the shipped template, apply the `LanguageFile`
    fix, and fill the values (see Configuration).
-5. Run it interactively from the clone, or install it as a WSL service (below).
+4. Run it interactively from the clone, or install it as a user service (below).
    The wrapper forces the `fork` start method, which the bot needs on Python
-   3.14 (see Run as a WSL service):
+   3.14 (see Run as a user service):
    ```bash
    ~/.local/share/bridgeipelago/venv/bin/python -u -c "import multiprocessing as m, runpy; m.set_start_method('fork'); runpy.run_path('bridgeipelago.py', run_name='__main__')" config.json
    ```
@@ -86,7 +81,7 @@ The clone lives outside this repository, so `config.json` and the data folders
 never enter Git. If a dependency will not build on the installed Python,
 install Python 3.12 and recreate the venv with it.
 
-Verified environment: WSL2 Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
+Verified environment: Ubuntu, Python 3.14.4, git 2.53, bridgeipelago
 `awepeeps-patches` (based on `live-v3.0.1`, commit `91a24ff`), websockets
 13.1, discord.py 2.7.1.
 
@@ -159,10 +154,10 @@ community documentation; the mirror policy applies to the bot repo.
 
 `config.json` is unchanged from v3.0.0, so no migration is needed.
 
-## Run as a WSL service
+## Run as a user service
 
-With systemd enabled in WSL, run the bot as a user service so it starts on boot
-and restarts on failure.
+Run the bot as a systemd user service so it starts on boot and restarts on
+failure.
 
 The service's working directory must be checked out on `awepeeps-patches`.
 Verify with `git branch --show-current` before starting or restarting it; do
@@ -179,12 +174,12 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/mnt/d/dev/<workspace>/projects/repos/awepeeps-bridgeipelago
+WorkingDirectory=/home/<user>/projects/repos/awepeeps-bridgeipelago
 ExecStart=/home/<user>/.local/share/bridgeipelago/venv/bin/python -u -c "import multiprocessing as m, runpy; m.set_start_method('fork'); runpy.run_path('bridgeipelago.py', run_name='__main__')" config.json
 Restart=on-failure
 RestartSec=10
-StandardOutput=append:/mnt/d/dev/<workspace>/projects/repos/awepeeps-bridgeipelago/bot.out
-StandardError=append:/mnt/d/dev/<workspace>/projects/repos/awepeeps-bridgeipelago/bot.out
+StandardOutput=append:/home/<user>/projects/repos/awepeeps-bridgeipelago/bot.out
+StandardError=append:/home/<user>/projects/repos/awepeeps-bridgeipelago/bot.out
 
 [Install]
 WantedBy=default.target
@@ -211,8 +206,7 @@ Logs go to `journalctl --user -u bridgeipelago -f` and the appended
 
 ## Docker alternative
 
-Install Docker Desktop with WSL integration and run `docker compose up -d` from
-the clone. `docker-compose.yaml` mounts the four data folders; if you change the
+Install Docker Engine and run `docker compose up -d` from the clone. `docker-compose.yaml` mounts the four data folders; if you change the
 data paths in `AdvancedConfig`, update the mounts to match.
 
 ## Configuration
@@ -695,7 +689,7 @@ connect during the reload.
   child process no longer inherits the global lock; the command loop dies the
   first time a port rescan is requested, which also breaks `$reloaddiscord`,
   `CycleDiscord`, and the port-change hand-off. Launch the bot with the `fork`
-  wrapper (see Run as a WSL service), or build the venv with Python 3.12/3.13.
+  wrapper (see Run as a user service), or build the venv with Python 3.12/3.13.
 
 ## Trust
 
