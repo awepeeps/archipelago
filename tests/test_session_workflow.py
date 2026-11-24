@@ -3,6 +3,7 @@
 import contextlib
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -124,15 +125,21 @@ class SessionWorkflowTests(unittest.TestCase):
                 self.assert_no_private_values(output.getvalue())
 
     def test_real_git_inspection_is_read_only_and_does_not_echo_remote_credentials(self):
-        subprocess.run(["git", "init", "--quiet", str(self.root)], check=True, capture_output=True)
-        subprocess.run(["git", "-C", str(self.root), "remote", "add", "origin", "https://private-test-token:private-password@example.invalid/private-id"], check=True, capture_output=True)
-        before = self.snapshot()
-        output = io.StringIO()
-        with contextlib.redirect_stdout(output):
-            code = session_doctor.main(["--repo", str(self.root)])
-        self.assertEqual(code, 0)
-        self.assert_no_private_values(output.getvalue())
-        self.assertEqual(before, self.snapshot())
+        # A Git hook exports GIT_DIR and GIT_WORK_TREE; they win over `git -C`,
+        # so the fixture repository below would otherwise be the caller's.
+        saved = {name: os.environ.pop(name) for name in list(os.environ) if name.startswith("GIT_")}
+        try:
+            subprocess.run(["git", "init", "--quiet", str(self.root)], check=True, capture_output=True)
+            subprocess.run(["git", "-C", str(self.root), "remote", "add", "origin", "https://private-test-token:private-password@example.invalid/private-id"], check=True, capture_output=True)
+            before = self.snapshot()
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                code = session_doctor.main(["--repo", str(self.root)])
+            self.assertEqual(code, 0)
+            self.assert_no_private_values(output.getvalue())
+            self.assertEqual(before, self.snapshot())
+        finally:
+            os.environ.update(saved)
 
     def test_close_plan_is_read_only_and_requires_dry_run(self):
         season = self.root / "2026" / "3. Fall"
